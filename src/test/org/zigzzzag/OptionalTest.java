@@ -63,4 +63,17 @@ public class OptionalTest {
         Optional<String> op = Optional.ofNullable("zigzzzag");
         op.ifPresent(null);
     }
+
+    @Test
+    public void optionaFilterTest() {
+        Optional<String> op = Optional.ofNullable("zigzzzag");
+        assertTrue(op.filter(x -> x.equals("zigzzzag")).isPresent());
+        assertFalse(op.filter(x -> x.equals("abc")).isPresent());
+    }
+
+    @Test
+    public void optionaMapTest() {
+        Optional<String> op = Optional.ofNullable("zigzzzag");
+        assertTrue(8 == op.map(x -> x.length()).get());
+    }
 }
