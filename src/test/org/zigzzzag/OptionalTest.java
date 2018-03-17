@@ -74,6 +74,12 @@ public class OptionalTest {
     @Test
     public void optionaMapTest() {
         Optional<String> op = Optional.ofNullable("zigzzzag");
-        assertTrue(8 == op.map(x -> x.length()).get());
+        assertTrue(8 == op.map(String::length).get());
+    }
+
+    @Test
+    public void optionaFlatMapTest() {
+        Optional<String> op = Optional.ofNullable("zigzzzag");
+        assertTrue(8 == op.flatMap(x -> Optional.of(x.length())).get());
     }
 }
