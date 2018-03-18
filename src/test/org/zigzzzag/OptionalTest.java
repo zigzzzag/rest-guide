@@ -10,6 +10,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings({"SpellCheckingInspection", "ConstantConditions"})
 public class OptionalTest {
 
     @Test
@@ -24,6 +25,7 @@ public class OptionalTest {
         assertTrue(op.isPresent());
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test(expected = NullPointerException.class)
     public void optionalOfTestNPE() {
         Optional.of(null);
@@ -74,12 +76,40 @@ public class OptionalTest {
     @Test
     public void optionaMapTest() {
         Optional<String> op = Optional.ofNullable("zigzzzag");
-        assertTrue(8 == op.map(String::length).get());
+        assertEquals(8, (int) op.map(String::length).get());
     }
 
     @Test
     public void optionaFlatMapTest() {
         Optional<String> op = Optional.ofNullable("zigzzzag");
-        assertTrue(8 == op.flatMap(x -> Optional.of(x.length())).get());
+        assertEquals(8, (int) op.flatMap(x -> Optional.of(x.length())).get());
+    }
+
+    @Test
+    public void optionaOrElseTest() {
+        Optional<String> op = Optional.ofNullable("zigzzzag");
+        assertEquals("zigzzzag", op.orElse("hell"));
+
+        op = Optional.ofNullable(null);
+        assertEquals("hell", op.orElse("hell"));
+
+        {
+            Optional<String> op1 = Optional.ofNullable("zigzzzag");
+            assertEquals("zigzzzag", op1.orElseGet(() -> op1.get() + " hell"));
+        }
+
+        {
+            Optional<String> op2 = Optional.ofNullable(null);
+            assertEquals("welcome to hell", op2.orElseGet(() -> op2.orElse("welcome to") + " hell"));
+        }
+
+        op = Optional.ofNullable("zigzzzag");
+        assertEquals("zigzzzag", op.orElseThrow(IllegalStateException::new));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void optionaOrElseThrowTest() {
+        Optional<String> op = Optional.ofNullable(null);
+        assertEquals("zigzzzag", op.orElseThrow(IllegalStateException::new));
     }
 }
