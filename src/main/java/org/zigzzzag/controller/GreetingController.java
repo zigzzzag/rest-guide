@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.zigzzzag.functional_interface.GreetingCreator;
 import org.zigzzzag.model.AllGreetingsModel;
 import org.zigzzzag.model.Greeting;
 import org.zigzzzag.service.GreetingService;
@@ -49,7 +50,9 @@ public class GreetingController {
             return new ResponseEntity<>(new Greeting(gr.getId(), gr.getContent()), HttpStatus.CONFLICT);
         }
 
-        return new ResponseEntity<>(greetingService.create(gr.getId(), gr.getContent()), HttpStatus.OK);
+        //GreetingCreator greetingCreator = Greeting::new;
+        GreetingCreator greetingCreator = (id, content) -> new Greeting(id, content);
+        return new ResponseEntity<>(greetingCreator.create(gr.getId(), gr.getContent()), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get all actual greeting", response = AllGreetingsModel.class)
