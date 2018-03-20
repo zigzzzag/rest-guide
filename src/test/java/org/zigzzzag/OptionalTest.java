@@ -13,6 +13,8 @@ import static org.junit.Assert.assertTrue;
 @SuppressWarnings({"SpellCheckingInspection", "ConstantConditions"})
 public class OptionalTest {
 
+    private static final String TEST_STR = "zigzzzag";
+
     @Test
     public void optionalEmptyTest() {
         Optional emptyOptional = Optional.empty();
@@ -21,7 +23,7 @@ public class OptionalTest {
 
     @Test
     public void optionalOfTest() {
-        Optional<String> op = Optional.of("zigzzzag");
+        Optional<String> op = Optional.of(TEST_STR);
         assertTrue(op.isPresent());
     }
 
@@ -33,7 +35,7 @@ public class OptionalTest {
 
     @Test
     public void optionalOfNullableTest() {
-        Optional<String> op = Optional.ofNullable("zigzzzag");
+        Optional<String> op = Optional.ofNullable(TEST_STR);
         assertTrue(op.isPresent());
 
         op = Optional.ofNullable(null);
@@ -42,8 +44,8 @@ public class OptionalTest {
 
     @Test
     public void optionalGetTest() {
-        Optional<String> op = Optional.ofNullable("zigzzzag");
-        assertEquals("zigzzzag", op.get());
+        Optional<String> op = Optional.ofNullable(TEST_STR);
+        assertEquals(TEST_STR, op.get());
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -54,7 +56,7 @@ public class OptionalTest {
 
     @Test
     public void optionalIfPresentTest() {
-        Optional<String> op = Optional.ofNullable("zigzzzag");
+        Optional<String> op = Optional.ofNullable(TEST_STR);
         final String[] res = {null};
         op.ifPresent(x -> res[0] = x + x);
         assertEquals("zigzzzagzigzzzag", res[0]);
@@ -62,40 +64,40 @@ public class OptionalTest {
 
     @Test(expected = NullPointerException.class)
     public void optionalNullIfPresentTest() {
-        Optional<String> op = Optional.ofNullable("zigzzzag");
+        Optional<String> op = Optional.ofNullable(TEST_STR);
         op.ifPresent(null);
     }
 
     @Test
     public void optionaFilterTest() {
-        Optional<String> op = Optional.ofNullable("zigzzzag");
-        assertTrue(op.filter(x -> x.equals("zigzzzag")).isPresent());
+        Optional<String> op = Optional.ofNullable(TEST_STR);
+        assertTrue(op.filter(x -> x.equals(TEST_STR)).isPresent());
         assertFalse(op.filter(x -> x.equals("abc")).isPresent());
     }
 
     @Test
     public void optionaMapTest() {
-        Optional<String> op = Optional.ofNullable("zigzzzag");
+        Optional<String> op = Optional.ofNullable(TEST_STR);
         assertEquals(8, (int) op.map(String::length).get());
     }
 
     @Test
     public void optionaFlatMapTest() {
-        Optional<String> op = Optional.ofNullable("zigzzzag");
+        Optional<String> op = Optional.ofNullable(TEST_STR);
         assertEquals(8, (int) op.flatMap(x -> Optional.of(x.length())).get());
     }
 
     @Test
     public void optionaOrElseTest() {
-        Optional<String> op = Optional.ofNullable("zigzzzag");
-        assertEquals("zigzzzag", op.orElse("hell"));
+        Optional<String> op = Optional.ofNullable(TEST_STR);
+        assertEquals(TEST_STR, op.orElse("hell"));
 
         op = Optional.ofNullable(null);
         assertEquals("hell", op.orElse("hell"));
 
         {
-            Optional<String> op1 = Optional.ofNullable("zigzzzag");
-            assertEquals("zigzzzag", op1.orElseGet(() -> op1.get() + " hell"));
+            Optional<String> op1 = Optional.ofNullable(TEST_STR);
+            assertEquals(TEST_STR, op1.orElseGet(() -> op1.get() + " hell"));
         }
 
         {
@@ -103,13 +105,13 @@ public class OptionalTest {
             assertEquals("welcome to hell", op2.orElseGet(() -> op2.orElse("welcome to") + " hell"));
         }
 
-        op = Optional.ofNullable("zigzzzag");
-        assertEquals("zigzzzag", op.orElseThrow(IllegalStateException::new));
+        op = Optional.ofNullable(TEST_STR);
+        assertEquals(TEST_STR, op.orElseThrow(IllegalStateException::new));
     }
 
     @Test(expected = IllegalStateException.class)
     public void optionaOrElseThrowTest() {
         Optional<String> op = Optional.ofNullable(null);
-        assertEquals("zigzzzag", op.orElseThrow(IllegalStateException::new));
+        assertEquals(TEST_STR, op.orElseThrow(IllegalStateException::new));
     }
 }
