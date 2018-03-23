@@ -11,66 +11,44 @@ import java.util.stream.Stream;
 
 public class ByteArray1CParseTest {
 
+    private static final String DATA_STR = "1CClientBankExchange\n"
+                                           + "ВерсияФормата=1.01\n"
+                                           + "Кодировка=Windows\n"
+                                           + "Отправитель=SAP ERP\n"
+                                           + "Получатель=Клиент-Банк\n"
+                                           + "ДатаСоздания=test\n"
+                                           + "ВремяСоздания=00:00:00\n"
+                                           + "ДатаНачала=test\n"
+                                           + "ДатаКонца=test\n"
+                                           + "РасчСчет=test\n"
+                                           + "Документ=Платежное поручение\n"
+                                           + "КонецДокумента\n"
+                                           + "КонецФайла";
 
-    private static final String DATA = "1CClientBankExchange\n"
-                                       + "ВерсияФормата=1.01\n"
-                                       + "Кодировка=Windows\n"
-                                       + "Отправитель=SAP ERP\n"
-                                       + "Получатель=Клиент-Банк\n"
-                                       + "ДатаСоздания=test\n"
-                                       + "ВремяСоздания=00:00:00\n"
-                                       + "ДатаНачала=test\n"
-                                       + "ДатаКонца=test\n"
-                                       + "РасчСчет=test\n"
-                                       + "Документ=Платежное поручение";
+    private static final Map<String, String> DATA_MAP = Stream.of(
+            new String[]{"1CClientBankExchange", ""},
+            new String[]{"ВерсияФормата", "1.01"},
+            new String[]{"Кодировка", "Windows"},
+            new String[]{"Отправитель", "SAP ERP"},
+            new String[]{"Получатель", "Клиент-Банк"},
+            new String[]{"ДатаСоздания", "test"},
+            new String[]{"ВремяСоздания", "00:00:00"},
+            new String[]{"ДатаНачала", "test"},
+            new String[]{"ДатаКонца", "test"},
+            new String[]{"РасчСчет", "test"},
+            new String[]{"Документ", "Платежное поручение"},
+            new String[]{"КонецДокумента", ""},
+            new String[]{"КонецФайла", ""}
+    ).collect(Collectors.toMap(s -> s[0], s -> s[1],
+                               (u, v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));},
+                               LinkedHashMap::new
+    ));
 
     private OneCParser oneCParser = new OneCParser();
 
     @Test
-    public void bytesToMapTest() {
-
-        Map<String, String> expected = Stream.of(
-                new Object[]{"1CClientBankExchange", ""},
-                new Object[]{"ВерсияФормата", "1.01"},
-                new Object[]{"Кодировка", "Windows"},
-                new Object[]{"Отправитель", "SAP ERP"},
-                new Object[]{"Получатель", "Клиент-Банк"},
-                new Object[]{"ДатаСоздания", "test"},
-                new Object[]{"ВремяСоздания", "00:00:00"},
-                new Object[]{"ДатаНачала", "test"},
-                new Object[]{"ДатаКонца", "test"},
-                new Object[]{"РасчСчет", "test"},
-                new Object[]{"Документ", "Платежное поручение"}
-        ).collect(Collectors.toMap(
-                s -> (String) s[0],
-                s -> (String) s[1],
-                (u, v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));},
-                LinkedHashMap::new
-        ));
-
-        Assert.assertEquals(expected, oneCParser.toMap(DATA));
-    }
-
-    @Test
-    public void mapToBytesTest() {
-
-        Map<String, String> map = Stream.of(
-                new String[]{"1CClientBankExchange", ""},
-                new String[]{"ВерсияФормата", "1.01"},
-                new String[]{"Кодировка", "Windows"},
-                new String[]{"Отправитель", "SAP ERP"},
-                new String[]{"Получатель", "Клиент-Банк"},
-                new String[]{"ДатаСоздания", "test"},
-                new String[]{"ВремяСоздания", "00:00:00"},
-                new String[]{"ДатаНачала", "test"},
-                new String[]{"ДатаКонца", "test"},
-                new String[]{"РасчСчет", "test"},
-                new String[]{"Документ", "Платежное поручение"}
-        ).collect(Collectors.toMap(s -> s[0], s -> s[1],
-                                   (u, v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));},
-                                   LinkedHashMap::new
-        ));
-
-        Assert.assertEquals(DATA, oneCParser.fromMap(map));
+    public void parseTest() {
+        Assert.assertEquals(DATA_MAP, oneCParser.toMap(DATA_STR));
+        Assert.assertEquals(DATA_STR, oneCParser.fromMap(DATA_MAP));
     }
 }
