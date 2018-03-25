@@ -14,7 +14,7 @@
 
     <distributionManagement>
         <repository>
-            <id>nexus-releases</id>
+            <id>maven-releases</id>
             <url>http://localhost:8081/nexus/content/repositories/releases</url>
         </repository>
     </distributionManagement>
@@ -131,8 +131,8 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <serverId>nexus-releases</serverId>
-                            <nexusUrl>http://localhost:8081/nexus/</nexusUrl>
+                            <serverId>maven-releases</serverId>
+                            <nexusUrl>http://localhost:8081/</nexusUrl>
                             <skipStaging>true</skipStaging>
                         </configuration>
                     </plugin>
